@@ -1,0 +1,15 @@
+export type ProductsTypes = {
+    id: string,
+    name: string,
+    desc: string,
+    country: string,
+    image: string,
+    price: number,
+    amountPack: number,
+    amountProduct: number,
+    strength: number,
+    height: number,
+    width: number, 
+    _length: number,
+    weight: number,
+}
