@@ -1,7 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { ProfileType } from "../Types/AuthTypes";
+import { UserAuth } from "../Types/AuthTypes";
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
 
@@ -30,7 +30,7 @@ export const AuthContextProvider = ({
     children: React.ReactNode;
 }) => {
     
-    const [user, setUser] = useState<ProfileType | any>(getInitialAuth);
+    const [user, setUser] = useState<any>(getInitialAuth);
     const [errorsLogin,setErrorsLogin] = useState<any>({
         email: '',
         password: ''
@@ -170,7 +170,7 @@ export const AuthContextProvider = ({
 
         }else {
 
-            setUser({...postData, id:userData.insertId})
+            setUser({id:userData.insertId})
             router.push(`/profile/${userData.insertId}`);
 
         }
@@ -231,14 +231,13 @@ export const AuthContextProvider = ({
         const {loggedIn, msgLoggedIn, userData } = result.data
         
         if(!loggedIn){
-            console.log('sadasdsa', msgLoggedIn)
             validationErrors.email = msgLoggedIn;
             setErrorsLogin(validationErrors)
             return
 
         }else {
 
-            setUser(userData[0])
+            setUser({id: userData[0].id})
 
         }
         

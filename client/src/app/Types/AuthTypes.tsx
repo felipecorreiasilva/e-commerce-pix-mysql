@@ -1,5 +1,5 @@
 export interface ProfileType {
-	uid: string,
+	id: string,
 	username: string,
 	email: string,
 	password: string,
@@ -7,4 +7,10 @@ export interface ProfileType {
 	phone: string,
 	birth: Date
 }
+
+export interface UserAuth {
+	id: any,
+}
+
+
 
