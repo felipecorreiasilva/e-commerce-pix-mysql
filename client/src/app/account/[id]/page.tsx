@@ -1,45 +1,43 @@
 "use client"
 
 import MainContainer from '@/app/components/MainContainer';
-import ProtectedRoute from '@/app/components/ProtectedRoute';
 import RedirectHomeRoute from '@/app/components/RedirectHomeRoute';
 import { useAuth } from '@/app/context/AuthContext';
 import axios from 'axios';
-import Head from 'next/head';
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react';
 
-const Profile = () => {
+const Account = () => {
 	
 	const { user, logOut } = useAuth();
 	const router = useRouter();
     const params = useParams()
-    const profileId = params?.id
-    const [profileData, setProfileData] = useState<any>({})
+    const accountId = params?.id
+    const [accountData, setAccountData] = useState<any>({})
 
     useEffect(() => {
-        const getProfileData = async() => {
+        const getAccountData = async() => {
 
-            const bUrl = `http://localhost:3001/profile/${profileId}`
+            const bUrl = `http://localhost:3001/account/${accountId}`
             
             if (user?.id) {
-                if (profileId != user.id) {
+                if (accountId != user.id) {
                 
-                    router.push(`/profile/${user.id}`);
+                    router.push(`/account/${user.id}`);
                     
                 }else {
 
                     const result = await axios.get(bUrl)
                     const resultData = result.data
                 
-                    setProfileData(resultData[0])
+                    setAccountData(resultData[0])
 
                 }
                 
             }
 
         }
-        getProfileData()
+        getAccountData()
         
     }, []);
     
@@ -47,21 +45,21 @@ const Profile = () => {
         
             <MainContainer>
 
-                {user?.id ?
+                {user?.id != null || undefined ?
                 
                 (
                 <div className="flex py-2 container mx-auto min-h-screen items-center">
-                    {profileId == user?.id && (
+                    {accountId == user?.id && (
                         <div className="text-gray-600 px-12 py-24 mt-24 overflow-y-hidden mx-auto">
                         <h2 className="text-2xl font-semibold mb-4">
-                            Você está logado {profileData?.email}
+                            Você está logado {accountData?.email}
                         </h2>
 
                         <div className="flex justify-center items-center mb-8">
                             <button
                                 onClick={() => {
                                     logOut();
-                                    router.push('/');
+                                    
                                 }}
                                 className="bg-black hover:bg-[#0f0f0f] px-10 py-3 rounded-md shadow-sm text-white"
                             >
@@ -85,4 +83,4 @@ const Profile = () => {
 	);
 };
 
-export default Profile;
+export default Account;

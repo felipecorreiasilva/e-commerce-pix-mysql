@@ -179,7 +179,7 @@ const RegisterForm = () => {
                                 id="phone"
                                 className='border py-2 px-4 outline-none focus:border-cyan-600'
                                 autoComplete="off"
-                                placeholder="Digite seu número de telefone"
+                                placeholder="(99) 9 9999-9999"
                                 onChange={handleOnChange}
                                 value={formData.phone}
                             />

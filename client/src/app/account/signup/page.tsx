@@ -10,7 +10,7 @@ export default function page ()  {
   const { user } = useAuth();
   return (
     <MainContainer>
-    {user === null ? 
+    {user === null || undefined ? 
         (<RegisterForm/>):(<ProtectedRoute><div className=""></div></ProtectedRoute>)
     }
     </MainContainer>

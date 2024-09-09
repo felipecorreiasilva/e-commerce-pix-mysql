@@ -117,7 +117,7 @@ const Navbar = () => {
                 })
             }
             <Link
-            href={`${user !== null ? `/profile/${user?.id}` : '/account/login'}`}
+            href={`${user !== null || undefined ? `${user?.verified ? `/account/${user?.id}`:`/account/verifyOTP/${user?.id}`}` : '/account/login'}`}
             className="flex h-[100px] w-[110px] items-center justify-center relative cursor-pointer hover:bg-[#0f0f0f] hover:bg-opacity-30"
             >
             <MdAccountCircle size={20} />
@@ -149,8 +149,8 @@ const Navbar = () => {
 
                                         <Link 
                                         
-                                        href={`${link.name == 'Conta' ? user !== null ? `/profile/${user?.id}` : `/account/login` :link.path}`}
-                                        // href={`${i == 5 ? `${user !== null ? `/profile/${user?.id}` : '/account/login'}`:link.path}`}
+                                        href={`${user !== null || undefined ? `${user?.verified ? `/account/${user?.id}`:`/account/verifyOTP/${user?.id}`}` : '/account/login'}`}
+                                        
 
                                         className='hover:bg-[#0f0f0f] py-4'
                                         

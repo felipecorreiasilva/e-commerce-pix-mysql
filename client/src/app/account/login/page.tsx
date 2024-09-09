@@ -13,7 +13,7 @@ export default function Login() {
         
             <MainContainer>
 
-                {user === null ? 
+                {user === null || undefined ? 
                 (<LoginForm/>)
                 :(<ProtectedRoute><div className=""></div></ProtectedRoute>)
                 }

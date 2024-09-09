@@ -164,15 +164,16 @@ export const AuthContextProvider = ({
         const {registered, msgRegistered, userData} = result.data
         
         if (!registered){
+            
             validationErrors.email = msgRegistered;
             setErrorsRegister(validationErrors)
             return
 
         }else {
 
-            setUser({id:userData.insertId})
-            router.push(`/profile/${userData.insertId}`);
-
+            setUser({id: userData.insertId, verified: userData.verified })
+            router.push(`/account/verifyOTP/${userData.insertId}`);
+            
         }
         
             
@@ -189,7 +190,7 @@ export const AuthContextProvider = ({
 
         }
 
-        const emailValidator = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const emailValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
         if (!email.trim()){
             validationErrors.email = "Campo obrigatório"
@@ -237,7 +238,13 @@ export const AuthContextProvider = ({
 
         }else {
 
-            setUser({id: userData[0].id})
+            setUser({id: userData.id, verified: userData.verified })
+            if (!userData.verified) {
+            router.push(`/account/verifyOTP/${userData.insertId}`);
+            }else {
+                router.push(`/account/${userData.insertId}`);
+            }
+            
 
         }
         
@@ -249,6 +256,7 @@ export const AuthContextProvider = ({
     // Logout the user
     const logOut = async () => {
         setUser(null);
+        router.push('/');
     };
 
     const value = { 

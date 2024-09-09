@@ -12,7 +12,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     useEffect(() => {
         
         if (user?.id) {
-            router.push('/');
+            if (!user?.verified) {
+            router.push(`/account/verifyOTP/${user?.id}`);
+            }else {
+                router.push(`/account/${user?.id}`);
+            }
+            
+            
         }
     }, [router, user]);
 
