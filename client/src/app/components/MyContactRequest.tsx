@@ -54,7 +54,7 @@ export default function MyContactRequest() {
             
             <div className='flex font-bold text-[#424242] p-5 bg-zinc-300 text-xs justify-center items-center'>
             <p>Já tem uma conta ?&nbsp;</p>
-            <a className="text-cyan-500" href="Login">
+            <a className="text-cyan-500" href="account/login">
                 Entrar
             </a>
             </div>

@@ -12,8 +12,8 @@ const page = () => {
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [verifyData, setVerify] = useState<any | null>('');
   const [errors, setErrors] = useState<string|null>('');
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(5);
+  const [minutes, setMinutes] = useState(1);
+  const [seconds, setSeconds] = useState(59);
   const params = useParams();
   const userId = params?.id;
   const { user, logOut, setUser } = useAuth();
@@ -55,7 +55,7 @@ const page = () => {
   };
 
   const handleResendOTP = async () => {
-    const bUrl = "http://localhost:3001/account/resendOTPVerificationCode"
+    const bUrl = "http://localhost:3001/account/resendOTPVerification"
     const result = await axios.post(bUrl, verifyData);
     console.log(result.data);
   };
@@ -157,7 +157,7 @@ const page = () => {
                 <p className="text-xs">
                   Verifique seu email para ter acesso completo da sua conta
                 </p>
-                <p className="text-xs">
+                <p className="text-xs text-center">
                   O código de verificação foi enviado para {verifyData?.email}.
                 </p>
               </div>
