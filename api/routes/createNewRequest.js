@@ -2,9 +2,10 @@ const express = require('express')
 const router = express.Router()
 const { db } = require('../db');
 
-router.post('/createNewRequest', async(req,res)=>{
+router.post('/', async(req,res)=>{
 
     const q = "INSERT INTO `newrequest` (`id` ,`adresses`, `cep`,  `city`, `cityComplement`, `country`, `deliveryMethod`, `emailContact`, `firstname`, `lastname`,  `houseNumber`, `cpf`, `phone`, `neighborhood`, `paymentMethod`, `pixCopiaECola`, `txid`, `uf`) VALUES (?)"
+    
     const values = [
         req.body.id,
         req.body.adresses,

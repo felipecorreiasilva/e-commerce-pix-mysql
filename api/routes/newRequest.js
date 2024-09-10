@@ -4,9 +4,11 @@ const { db } = require('../db');
 const { createPixCharge } = require('../lib/pix.js')
 
 router.post('/', async(req, res) => {
+    
     const pixCharge = await createPixCharge(req.body)
     const {qrcode, cobranca} = pixCharge;
     return res.send({ ok: 1, qrcode, cobranca })
+    
 })
 
 router.get('/v2/loc/:id/qrcode', async(req, res) => {

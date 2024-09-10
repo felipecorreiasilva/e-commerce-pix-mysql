@@ -114,7 +114,7 @@ export default function PaymentMethodRequest() {
                             country: 'Brasil',
                             
                         }
-
+                        
                         await axios.post('http://localhost:3001/createNewRequest', newRequestData)
                         
                         setNewRequest(newRequestData)

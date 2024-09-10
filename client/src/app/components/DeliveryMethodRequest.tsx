@@ -36,7 +36,7 @@ export default function DeliveryMethodRequest() {
         setVerifiedDeliveryMethod(true)
     }
 
-    const [fretes, setFretes] = useState<any>([])
+    const [fretes, setFretes] = useState<any|null>([null])
     
     useEffect(() => {
 
