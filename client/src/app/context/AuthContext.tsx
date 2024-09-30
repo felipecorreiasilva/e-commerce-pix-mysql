@@ -1,13 +1,15 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { UserAuth } from "../Types/AuthTypes";
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
+import api from '@/services/api'
 
 const AuthContext = createContext({
     user: {},
     setUser: function (value:any) { return value },
+    _token: {},
+    setToken: function (value:any) { return value },
     errorsRegister: {},
     setErrorsRegister: function (value:any) { return value },
     errorsLogin: {},
@@ -19,10 +21,11 @@ const AuthContext = createContext({
 
 export const useAuth = () => useContext<any>(AuthContext);
 
-const getInitialAuth = () => {
-    const user = (typeof window !== 'undefined') && localStorage.getItem('user')
-    return user && JSON.parse(user)
+const getInitialToken = () => {
+    const token = (typeof window !== 'undefined') && localStorage.getItem('token')
+    return token ? JSON.parse(token) : null
 }
+
 // Create the auth context provider
 export const AuthContextProvider = ({
     children
@@ -30,7 +33,10 @@ export const AuthContextProvider = ({
     children: React.ReactNode;
 }) => {
     
-    const [user, setUser] = useState<any>(getInitialAuth);
+    const [user, setUser] = useState<any>(null);
+    const [_token, setToken] = useState<any>(getInitialToken);
+    
+    const [loading, setLoading] = useState(true);
     const [errorsLogin,setErrorsLogin] = useState<any>({
         email: '',
         password: ''
@@ -48,10 +54,34 @@ export const AuthContextProvider = ({
         
     })
     const router = useRouter();
+
     useEffect(() => {
-        localStorage.setItem('user', JSON.stringify(user))
-    }, [user]);
+        localStorage.setItem('token', JSON.stringify(_token))
+    }, [_token]);
+
+    useEffect(() => {
+        const getAccountData = async() => {
+        
+        const bUrl = `http://localhost:3001/account`
+
+        if (_token) {
+            const result = await axios.get(bUrl, {
+                headers: {
+                  'Authorization': `Bearer ${_token}`
+                }})
+            const resultData = result.data
+            setUser(resultData)
+        }
     
+        setLoading(false);
+        }
+
+        getAccountData()
+      }, [_token]);
+
+    
+
+
     // Sign up the user
     const signUp = async(values:any) => {
         
@@ -171,8 +201,8 @@ export const AuthContextProvider = ({
 
         }else {
 
-            setUser({id: userData.insertId, verified: userData.verified })
-            router.push(`/account/verifyOTP/${userData.insertId}`);
+            // setUser({id: userData.insertId, verified: userData.verified })
+            // router.push(`/account/verifyOTP/${userData.insertId}`);
             
         }
         
@@ -229,7 +259,7 @@ export const AuthContextProvider = ({
             password
         }
         const result = await axios.post(burl,postData)
-        const {loggedIn, msgLoggedIn, userData } = result.data
+        const {loggedIn, msgLoggedIn,token } = result.data
         
         if(!loggedIn){
             validationErrors.email = msgLoggedIn;
@@ -238,23 +268,17 @@ export const AuthContextProvider = ({
 
         }else {
 
-            setUser({id: userData.id, verified: userData.verified })
-            if (!userData.verified) {
-            router.push(`/account/verifyOTP/${userData.insertId}`);
-            }else {
-                router.push(`/account/${userData.insertId}`);
-            }
+            setToken(token)
             
 
         }
-        
-        
-
-       
+          
     };
 
     // Logout the user
     const logOut = async () => {
+        localStorage.removeItem('token');
+        api.defaults.headers.Authorization = null;
         setUser(null);
         router.push('/');
     };
@@ -262,6 +286,8 @@ export const AuthContextProvider = ({
     const value = { 
         user,
         setUser,
+        _token,
+        setToken,
         signUp,
         logIn, 
         logOut,

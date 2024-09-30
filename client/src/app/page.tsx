@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function Home() {
 
-  const [dataProducts, setDataProducts] = useState<ProductsTypes[]>([])
+  const [dataProducts, setDataProducts] = useState<ProductsTypes[]>([])    
 
     useEffect(() => {
         const fetchData = async () => {

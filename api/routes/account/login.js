@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { db } = require('../../db');
 const {compare} = require('bcrypt');
+const {sign} = require('jsonwebtoken')
 
 router.post('/', async(req, res) => {
 
@@ -14,11 +15,13 @@ router.post('/', async(req, res) => {
             if (userData.length > 0){
                 
                 const validPassword = await compare(password, userData[0].password);
-                console.log(validPassword)
                 if (!validPassword){
-                    return res.json({msgLoggedIn: "Senha inválida", loggedIn: false})
+                    return res.json({msgLoggedIn: "Usuário ou senha inválido", loggedIn: false})
                 }else {
-                    res.json({msgLoggedIn: 'Usuário logado com sucesso', userData: userData[0], loggedIn: true})
+                    const userId = userData[0].id
+                    
+                    let token = sign({id:userId}, process.env.AUTH_SECRET_JWT)
+                    res.json({msgLoggedIn: 'Usuário logado com sucesso', loggedIn: true, token})
 
                 }
                 

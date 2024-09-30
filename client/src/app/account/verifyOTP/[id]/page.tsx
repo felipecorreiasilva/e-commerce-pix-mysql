@@ -10,7 +10,6 @@ import { IoShieldCheckmark } from "react-icons/io5";
 
 const page = () => {
   const [otp, setOtp] = useState(new Array(4).fill(""));
-  const [verifyData, setVerify] = useState<any | null>('');
   const [errors, setErrors] = useState<string|null>('');
   const [minutes, setMinutes] = useState(1);
   const [seconds, setSeconds] = useState(59);
@@ -18,7 +17,6 @@ const page = () => {
   const userId = params?.id;
   const { user, logOut, setUser } = useAuth();
   const router = useRouter();
-
   const handleOnChange = (e: any, index: number) => {
     if (isNaN(e.target.value)) return false;
 
@@ -56,8 +54,16 @@ const page = () => {
 
   const handleResendOTP = async () => {
     const bUrl = "http://localhost:3001/account/resendOTPVerification"
+    
+    const verifyData = {
+      id: user.id,
+      email: user.email,
+      firstname: user.firstname,
+      lastname: user.lastname,
+
+    }
+    
     const result = await axios.post(bUrl, verifyData);
-    console.log(result.data);
   };
 
   const handleOnSubmit = async () => {
@@ -106,41 +112,25 @@ const page = () => {
   }, [seconds]);
 
   useEffect(() => {
-    const getAccountData = async() => {
-
-        const bUrl = `http://localhost:3001/account/${userId}`
+    const redirectRouter = async() => {
         
         if (user?.id) {
             if (userId != user.id) {
             
                 router.push(`/account/verifyOTP/${user.id}`);
                 
-            }else {
-
-                const result = await axios.get(bUrl)
-                const resultData = result.data
-            
-                setVerify({
-                  userId,
-                  email: resultData[0].email,
-                  firstname: resultData[0].firstname,
-                  lastname: resultData[0].lastname,
-                })
-                
-                setUser({id: resultData[0]?.id, verified: resultData[0]?.verified })
-
             }
             
         }
 
     }
-    getAccountData()
+    redirectRouter()
     
 }, []);
 
   return (
     <MainContainer>
-      <>
+      
       {!user?.verified ? (
         <>
         {user?.id != null || undefined ? (
@@ -158,7 +148,7 @@ const page = () => {
                   Verifique seu email para ter acesso completo da sua conta
                 </p>
                 <p className="text-xs text-center">
-                  O código de verificação foi enviado para {verifyData?.email}.
+                  O código de verificação foi enviado para {user?.email}.
                 </p>
               </div>
 
@@ -235,7 +225,7 @@ const page = () => {
       ):(
         router.push(`/account/${user.id}`)
       )}
-      </>
+      
       
     </MainContainer>
   );
